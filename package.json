@@ -1,0 +1,15 @@
+{
+  "name": "crap",
+  "description": "Generate and write a heapdump upon an uncaught exception",
+  "repository": "git://github.com/segmentio/crap.git",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "dependencies": {
+    "heapdump": "^0.2.9"
+  },
+  "devDependencies": {
+    "glob": "^4.0.5",
+    "mocha": "1.x"
+  }
+}
