@@ -13,39 +13,39 @@ This module exports a single function that when called, should be passed the dir
 
 It is recommended that you pass the optional error handler so that your application can log, cleanup and exit correctly. Otherwise the default error handler will simply exit the process.
 
-    ```js
-    var crap = require('oh-crap')(__dirname, onerror);
+```js
+var crap = require('crap')(__dirname, onerror);
 
-    // message instance
-    var msg = new Message({
-      name: 'yo',
-      event: 'order complete',
-      properties:{
-        products: { '0': { sku: 'xxx' } }
-      }
-    });
+// message instance
+var msg = new Message({
+  name: 'yo',
+  event: 'order complete',
+  properties:{
+    products: { '0': { sku: 'xxx' } }
+  }
+});
 
-    // cause an error
-    setTimeout(function(){
-      msg.properties.products.forEach(console.log);
-    }, 250);
+// cause an error
+setTimeout(function(){
+  msg.properties.products.forEach(console.log);
+}, 250);
 
-    // handle the error
-    function onerror(err){
-      console.error(err.stack);
-      setTimeout(function(){
-        console.error('exiting');
-        process.exit(1);
-      }, 1000);
-    }
+// handle the error
+function onerror(err){
+  console.error(err.stack);
+  setTimeout(function(){
+    console.error('exiting');
+    process.exit(1);
+  }, 1000);
+}
 
-    // constructors make debugging life easier
-    function Message(obj){
-      this.type = obj.type;
-      this.event = obj.event;
-      this.properties = obj.properties;
-    }
-    ```
+// constructors make debugging life easier
+function Message(obj){
+  this.type = obj.type;
+  this.event = obj.event;
+  this.properties = obj.properties;
+}
+```
 
 When running the example above, the uncaught exception `TypeError: Object #<Object> has no method 'forEach'` will be thrown. Since we have the snapshot written at the time of the uncaught exception, we can view the state of V8's heap using Google Chrome's heap profiler to answer the question you might thinking if this were production: *"That's strange, if products isn't an array, I wonder what got assigned to it?"*
 
