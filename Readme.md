@@ -5,7 +5,7 @@ Dump a heap snapshot upon an uncaught exception. Inspired by [hapijs poop](https
 
 ## Installation
 
-    $ npm install crap
+    $ npm install oh-crap
 
 ## Usage
 
@@ -14,7 +14,7 @@ This module exports a single function that when called, should be passed the dir
 It is recommended that you pass the optional error handler so that your application can log, cleanup and exit correctly. Otherwise the default error handler will simply exit the process.
 
 ```js
-var crap = require('crap')(__dirname, onerror);
+var crap = require('oh-crap')(__dirname, onerror);
 
 // message instance
 var msg = new Message({
