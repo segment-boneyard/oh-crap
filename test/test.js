@@ -5,6 +5,21 @@ var path = require('path');
 var glob = require('glob');
 var fs = require('fs');
 
+function runChild(file, cb) {
+  var app = spawn('node', [path.join(__dirname, file)]);
+  var stdout = [], stderr = [];
+  app.stdout.on('data', stdout.push.bind(stdout));
+  app.stderr.on('data', stderr.push.bind(stderr));
+  app.on('error', cb);
+  app.on('exit', function(code) {
+    cb(null, {
+      code: code,
+      stdout: Buffer.concat(stdout),
+      stderr: Buffer.concat(stderr)
+    });
+  });
+}
+
 describe('oh-crap', function(){
   after(function(done){
     var pattern = path.join(__dirname, '/*.heapsnapshot');
@@ -16,19 +31,17 @@ describe('oh-crap', function(){
   });
 
   it('should call the user provided error handler', function(done){
-    var app = spawn('node', [path.join(__dirname, 'app-handler.js')]);
-    app.stdout.once('data', function(data){
-      assert(data.toString() === 'bye!\n');
-    });
-    app.on('exit', function(code){
-      assert(code === 1);
+    runChild('app-handler.js', function(err, app) {
+      assert.ifError(err);
+      assert.equal(app.stdout.toString(), 'bye!\n');
+      assert.equal(app.code, 1);
       done();
     });
   });
 
   it('should write the snapshot', function(done){
-    var app = spawn('node', [path.join(__dirname, 'app-handler.js')]);
-    app.on('exit', function(code){
+    runChild('app-handler.js', function(err, app) {
+      assert.ifError(err);
       var pattern = path.join(__dirname, '/*.heapsnapshot');
       glob(pattern, function(err, files){
         if (err) return done(err);
@@ -39,15 +52,10 @@ describe('oh-crap', function(){
   });
 
   it('should use the internal handler by default', function(done){
-    var app = spawn('node', [path.join(__dirname, 'app-defaults.js')]);
-    app.stdout.once('data', function(data){
-      assert(data.toString() === 'exiting -- crap!\n');
-    });
-    app.stderr.once('data', function(data){
-      assert(data.toString().split('\n')[0] === 'Error: ahh');
-    });
-    app.on('exit', function(code){
-      assert(code === 1);
+    runChild('app-defaults.js', function(err, app) {
+      assert.ifError(err);
+      assert(/Error: ahh/.test(app.stderr.toString()));
+      assert.notEqual(app.code, 0);
       done();
     });
   });
