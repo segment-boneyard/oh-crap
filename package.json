@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
-    "heapdump": "^0.2.9"
+    "heapdump": "^0.3.7"
   },
   "devDependencies": {
     "glob": "^4.0.5",
