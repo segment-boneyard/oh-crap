@@ -2,7 +2,7 @@
   "name": "oh-crap",
   "description": "Generate and write a heapdump upon an uncaught exception",
   "repository": "segmentio/oh-crap.git",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
